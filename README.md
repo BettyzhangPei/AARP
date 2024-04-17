@@ -18,8 +18,9 @@ devtools::install_github("BettyzhangPei/AARPmemR")
 ```
 
 # Usage Examples
-- `NEM` fucntion
-`NEM` function provides estimates based on the different types of input nutrients. For example:
+- `NEM` function
+
+The `NEM` function provides estimates based on various types of input nutrients. For instance:
 ```r
 NME(Q.N.1= Protein.FFQ.1, Q.N.2= Protein.FFQ.2, Q.E.1= Energy.FFQ.1, Q.E.2= Energy.FFQ.2,
     F.N.1= Protein.24hr.1, F.N.2= Protein.24hr.2, F.E.1= Energy.24hr.1, F.E.2= Energy.24hr.2,
