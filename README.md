@@ -38,10 +38,6 @@ where
 - F.E.1: A reference instrument for total energy (E) at time 1.
 - F.E.2: A reference instrument for total energy (E) at time 2.
 
-# Developing
-- The estimated 95% confidence intervals will be developed.
-- We are trying to develop other methods as well.
-
 # Usage Notes
 1. We recommend transforming each variable (e.g., using a log transformation) to approximate a normal distribution before applying our functions.
 2. Our calculations assume there is no missing data in the dataset.
