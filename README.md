@@ -24,8 +24,8 @@ The `NEM` function provides estimates based on various types of input nutrients.
 ```r
 NME(Q.N.1= FFQ.Protein.1, Q.N.2= FFQ.Protein.2,
  Q.E.1= FFQ.Energy.1, Q.E.2= FFQ.Energy.2,
- F.N.1= 24HR.Protein.1, F.N.2= 24HR.Protein.2,
- F.E.1= 24HR.Energy.1, F.E.2= 24HR.Energy.2,
+ F.N.1= Ref.Protein.1, F.N.2= Ref.Protein.2,
+ F.E.1= Ref.Energy.1, F.E.2= Ref.Energy.2,
  data=input_data)
 ```
 where
