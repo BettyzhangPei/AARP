@@ -22,9 +22,11 @@ devtools::install_github("BettyzhangPei/AARPmemR")
 
 The `NEM` function provides estimates based on various types of input nutrients. For instance:
 ```r
-NME(Q.N.1= Protein.FFQ.1, Q.N.2= Protein.FFQ.2, Q.E.1= Energy.FFQ.1, Q.E.2= Energy.FFQ.2,
-    F.N.1= Protein.24hr.1, F.N.2= Protein.24hr.2, F.E.1= Energy.24hr.1, F.E.2= Energy.24hr.2,
-    data=input_data)
+NME(Q.N.1= FFQ.Protein.1, Q.N.2= FFQ.Protein.2,
+ Q.E.1= FFQ.Energy.1, Q.E.2= FFQ.Energy.2,
+ F.N.1= 24HR.Protein.1, F.N.2= 24HR.Protein.2,
+ F.E.1= 24HR.Energy.1, F.E.2= 24HR.Energy.2,
+ data=input_data)
 ```
 where
 - Q.N.1: An assessment instrument for nutrient (N) at time 1.
@@ -45,7 +47,7 @@ where
 2. Our calculations assume there is no missing data in the dataset.
 3. Following Thompson et al. (2008), nutrients and energy are measured twice for each Q and F.
    
-# References: 
+# References
 Thompson, F.E., Kipnis, V., Midthune D., Freedman, L.S., Carroll, R.J., Subar, A.F., Brown, C.C., Butcher, M.S., Mouw, T., Leitzmann, M., Schatzkin, A.(2008) Performance of a food-frequency questionnaire in the US NIH-AARP (National Institutes of Health-American Association of Retired Persons) Diet and Health Study. Public Health Nutrition, 11(2): 183-95.
 
 Carroll, R.J., Midthune, D., Freedman, L. S., and Kipnis, V. (2006) Seemingly unrelated measurement error models,
