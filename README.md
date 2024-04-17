@@ -25,6 +25,15 @@ NME(Q.N.1= Protein.FFQ.1, Q.N.2= Protein.FFQ.2, Q.E.1= Energy.FFQ.1, Q.E.2= Ener
     F.N.1= Protein.24hr.1, F.N.2= Protein.24hr.2, F.E.1= Energy.24hr.1, F.E.2= Energy.24hr.2,
     data=input_data)
 ```
+where
+- Q.N.1: An assessment instrument for nutrient (N) at time 1.
+- Q.N.2: An assessment instrument for nutrient (N) at time 2.
+- Q.E.1: An assessment instrument for total energy (E) at time 1.
+- Q.E.2: An assessment instrument for total energy (E) at time 2.
+- F.N.1: A reference instrument for nutrient (N) at time 1.
+- F.N.2: A reference instrument for nutrient (N) at time 2.
+- F.E.1: A reference instrument for total energy (E) at time 1.
+- F.E.2: A reference instrument for total energy (E) at time 2.
 
 # Developing
 - The estimated 95% confidence intervals will be developed.
