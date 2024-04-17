@@ -14,7 +14,7 @@ Building on the measurement error model by Thompson et al. (2008), our R package
 # Installation
 The current version can be installed from source using the package `devtools`
 ```r
-devtools::install_github("BettyzhangPei/AARPmemR")
+devtools::install_github("BettyzhangPei/AARP")
 ```
 
 # Usage Examples
