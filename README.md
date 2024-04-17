@@ -11,10 +11,30 @@ Building on the measurement error model by Thompson et al. (2008), our R package
 - The correlation between nutrient residuals (Q_R) and true residuals (T_R).
 - The attenuation factors for Q_N, Q_E, and Q_R.
 
-# Usage Notes:
+# Installation
+The current version can be installed from source using the package `devtools`
+```r
+devtools::install_github("BettyzhangPei/AARPmemR")
+```
+
+# Usage Examples
+- `NEM` fucntion
+`NEM` function provides estimates based on the different types of input nutrients. For example:
+```r
+NME(Q.N.1= Protein.FFQ.1, Q.N.2= Protein.FFQ.2, Q.E.1= Energy.FFQ.1, Q.E.2= Energy.FFQ.2,
+    F.N.1= Protein.24hr.1, F.N.2= Protein.24hr.2, F.E.1= Energy.24hr.1, F.E.2= Energy.24hr.2,
+    data=input_data)
+```
+
+# Developing
+- The estimated 95% confidence intervals will be developed.
+- We are trying to develop other methods as well.
+
+# Usage Notes
 1. We recommend transforming each variable (e.g., using a log transformation) to approximate a normal distribution before applying our functions.
 2. Our calculations assume there is no missing data in the dataset.
 3. Following Thompson et al. (2008), nutrients and energy are measured twice for each Q and F.
    
-Reference: Thompson FE, Kipnis V, Midthune D, Freedman LS, Carroll RJ, Subar AF, Brown CC, Butcher MS, Mouw T, Leitzmann M, Schatzkin A. Performance of a food-frequency questionnaire in the US NIH-AARP (National Institutes of Health-American Association of Retired Persons) Diet and Health Study. Public Health Nutr. 2008 Feb;11(2):183-95. doi: 10.1017/S1368980007000419.
+# References: 
+Thompson, F.E., Kipnis, V., Midthune D., Freedman, L.S., Carroll, R.J., Subar, A.F., Brown, C.C., Butcher, M.S., Mouw, T., Leitzmann, M., Schatzkin, A.(2008) Performance of a food-frequency questionnaire in the US NIH-AARP (National Institutes of Health-American Association of Retired Persons) Diet and Health Study. Public Health Nutrition: 11(2), 183-95.
    
