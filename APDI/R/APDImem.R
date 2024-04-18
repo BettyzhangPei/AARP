@@ -82,8 +82,8 @@
 #' D<- matrix(0, nrow=8 , ncol=I)
 #' D<- t(as.matrix(mvrnorm(I, mu, Sigma)))
 #' Data<- data.frame(t(D))
-#' colnames(Data)<- c("FFQ.N.1","FFQ.N.2", "FFQ.E.1", "FFQ.E.2", "24hr.N.1", "24hr.N.2","24hr.E.1", "24hr.E.2")
-#' ex1<- NME(Q.N.1=FFQ.N.1, Q.N.2=FFQ.N.2, Q.E.1= FFQ.E.1, Q.E.2= FFQ.E.2, F.N.1= 24hr.N.1, F.N.2= 24hr.N.2, F.E.1= 24hr.E.1, F.E.2= 24hr.E.2, data=Data)
+#' colnames(Data)<- c("FFQ.N.1","FFQ.N.2", "FFQ.E.1", "FFQ.E.2", "Ref.N.1", "Ref.N.2","Ref.E.1", "Ref.E.2")
+#' ex1<- NME(Q.N.1=Data$FFQ.N.1, Q.N.2=Data$FFQ.N.2, Q.E.1= Data$FFQ.E.1, Q.E.2= Data$FFQ.E.2, F.N.1= Data$Ref.N.1, F.N.2= Data$Ref.N.2, F.E.1= Data$Ref.E.1, F.E.2= Data$Ref.E.2)
 #' print(ex1)
 #'
 #' @references Thompson, F. E., Kipnis, V., Midthune, D., Freedman, L.S., Carroll, R.J., Subar, A.F., Brown, C.C., Butcher, M.S.,  Mouw, T., Leitzmann, M. and Schatzkin, A. (2008) Performance of a food-frequency questionnaire in the us NIH--AARP (National Institutes of Health--American Association of Retired Persons) Diet and Health Study. \emph{Public Health Nutrition}, 11, 183-195.
@@ -203,7 +203,7 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
   rownames(est.fix.par) <- c("Beta.N1", "Beta.E1", "Mu.T.N",  "Mu.T.E", "Mu.N0.2", "Mu.E0.2", "Beta.N0.1", "Beta.N0.2", "Beta.E0.1","Beta.E0.2" )
 
 
-  return(list(est.coefficients= as.matrix(est.coeff), est.covariance.matrix= est.cov.mat), est.fix.parameters= as.matrix(est.fix.par))
+  return(list(est.coefficients= as.matrix(est.coeff), est.covariance.matrix= est.cov.mat), est.fix.parameters= as.matrix(est.fix.par)))
 
 }
 
