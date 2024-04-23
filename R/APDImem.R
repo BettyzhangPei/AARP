@@ -168,7 +168,7 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
   # correlation coefficient for residual R:
   est.coeff[5]<- (est.theta[5] * est.theta[7]* est.theta[15] - est.theta[3] * est.theta[9]* est.theta[15]  - est.theta[6] * est.theta[7]* est.theta[13] + est.theta[3] * est.theta[10]* est.theta[13]) / sqrt(est.theta[7]* est.theta[15]*(est.theta[12]* est.theta[15]- (est.theta[13])^2)*(est.theta[1]*est.theta[7]- (est.theta[3])^2))
   # attenuation factor for residual R:
-  est.coeff[6]<- (est.theta[5] * est.theta[7]* est.theta[15] - est.theta[3] * est.theta[9]* est.theta[15]  - est.theta[6] * est.theta[7]* est.theta[13] + est.theta[3] * est.theta[10]* est.theta[13]) / est.theta[15]*(est.theta[1]* est.theta[7]- (est.theta[3])^2)
+  est.coeff[6]<- (est.theta[5] * est.theta[7]* est.theta[15] - est.theta[3] * est.theta[9]* est.theta[15]  - est.theta[6] * est.theta[7]* est.theta[13] + est.theta[3] * est.theta[10]* est.theta[13]) / (est.theta[15]*(est.theta[1]* est.theta[7]- (est.theta[3])^2))
 
   est.coeff<- data.frame(est.coeff)
   rownames(est.coeff) <- c("Rho.N", "Lambda.N", "Rho.E",  "Lambda.E", "Rho.R",  "Lambda.R")
