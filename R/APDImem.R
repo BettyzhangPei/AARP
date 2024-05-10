@@ -176,31 +176,34 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
 
 
   # other unknown fixed parameters in the model:
+  # other unknown fixed parameters in the model:
   est.fix.par<- rep(0,10)
 
-  # estimated beta_N1:
-  est.fix.par[1]<- est.theta[5]/est.theta[15]
-  # estimated beta_E1:
-  est.fix.par[2]<- est.theta[10]/est.theta[15]
-  # estimated mu_T_N:
-  est.fix.par[3]<- mean(D[5,])
-  # estimated mu_T_E:
-  est.fix.par[4]<- mean(D[7,])
-  # estimated mu_N0_2:
-  est.fix.par[5]<- mean(D[6,]) - mean(D[5,])
-  # estimated mu_E0_2:
-  est.fix.par[6]<- mean(D[8,]) - mean(D[7,])
   # estimated beta_N0_1:
-  est.fix.par[7]<- mean(D[1,]) - est.fix.par[1]*est.fix.par[3]
-  # estimated beta_N0_2:
-  est.fix.par[8]<- mean(D[2,]) - est.fix.par[1]*est.fix.par[3]
+  est.fix.par[1]<-  mean(D[1,]) - est.fix.par[1]*est.fix.par[3]
+  #  estimated beta_N0_2:
+  est.fix.par[2]<- mean(D[2,]) - est.fix.par[1]*est.fix.par[3]
+  # estimated beta_N1:
+  est.fix.par[3]<- est.theta[5]/est.theta[12]
   # estimated beta_E0_1:
-  est.fix.par[9]<- mean(D[3,]) - est.fix.par[2]*est.fix.par[4]
+  est.fix.par[4]<- mean(D[3,]) - est.fix.par[2]*est.fix.par[4]
   # estimated beta_E0_2:
-  est.fix.par[10]<- mean(D[4,]) -est.fix.par[2]*est.fix.par[4]
+  est.fix.par[5]<- mean(D[4,]) -est.fix.par[2]*est.fix.par[4]
+  # estimated beta_E1:
+  est.fix.par[6]<- est.theta[10]/est.theta[15]
+  # estimated mu_T_N:
+  est.fix.par[7]<- mean(D[5,])
+  # estimated mu_T_E:
+  est.fix.par[8]<- mean(D[7,])
+  # estimated mu_N0_2:
+  est.fix.par[9]<- mean(D[6,]) - mean(D[5,])
+  # estimated mu_E0_2:
+  est.fix.par[10]<- mean(D[8,]) - mean(D[7,])
 
+  
   est.fix.par<- data.frame(est.fix.par)
-  rownames(est.fix.par) <- c("Beta.N1", "Beta.E1", "Mu.T.N",  "Mu.T.E", "Mu.N0.2", "Mu.E0.2", "Beta.N0.1", "Beta.N0.2", "Beta.E0.1","Beta.E0.2" )
+  
+  rownames(est.fix.par) <- c("Beta.N0.1", "Beta.N0.2", "Beta.N1", "Beta.E0.1","Beta.E0.2", "Beta.E1", "Mu.T.N",  "Mu.T.E", "Mu.N0.2", "Mu.E0.2")
 
   return(list(est.coefficients= as.matrix(est.coeff)))
   #return(list(est.coefficients= as.matrix(est.coeff), est.covariance.matrix= est.cov.mat, est.fix.parameters= as.matrix(est.fix.par)))
