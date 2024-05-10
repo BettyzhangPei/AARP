@@ -51,8 +51,8 @@
 #' # number of observed individuals:
 #' I<- 100
 #' # fixed effects in the measurement error model:
-#' # beta = (beta_N0_1, beta_N0_2, beta_N1, beta_E0_1, beta_E0_2, beta_E1)
-#' beta<-  c(0.4, 0.5, 0.3,0.32,0.3,0.35)
+#' # beta = (beta_N0_1, beta_N0_2, beta_N1, beta_E0_1, beta_E0_2, beta_E1), beta_N1= theta5/theta12, beta_E1 = theta10/theta15
+#' beta<-  c(0.4, 0.5, 0.175/0.35,0.32,0.3, 0.232/0.3)
 #' # mu_1 = (mu_T_N, mu_T_E, mu_N0_2, mu_E0_2)
 #' mu_1<-  c(0.3,0.32,0.4,0.35)
 #' # mu = first moments:  the mean vector of D_i
@@ -70,7 +70,7 @@
 #' # we notice that theta1, theta7, theta11, theta12, theta14, theta15 are variance components, then they should be set as positive numbers.
 #' theta<- rep(0,15)
 #' # the setting of theta:
-#' theta<- c(0.5, 0, 0, 0, 0.175 , 0, 0.58, 0, 0, 0.232, 0.5, 0.35, 0 , 0.55 ,0.3)
+#' theta<- c(0.5, 0, 0, 0, 0.175, 0, 0.58, 0, 0, 0.232, 0.5, 0.35, 0 , 0.55 ,0.3)
 #' theta_set<- c(theta[1], theta[2], theta[3], theta[4], theta[5], theta[5], theta[6], theta[6], theta[2], theta[1], theta[4], theta[3], theta[5], theta[5], theta[6], theta[6],
 #'              theta[3], theta[4], theta[7], theta[8], theta[9], theta[9], theta[10], theta[10], theta[4], theta[3], theta[8], theta[7], theta[9], theta[9], theta[10], theta[10],
 #'              theta[5], theta[5], theta[9], theta[9], theta[11], theta[12], theta[13],theta[13],
