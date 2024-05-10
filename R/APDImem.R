@@ -175,7 +175,7 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
 
 
 
-  # other unknown fixed parameters in the model:
+  
   # other unknown fixed parameters in the model:
   est.fix.par<- rep(0,10)
 
