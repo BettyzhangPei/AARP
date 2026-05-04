@@ -277,7 +277,5 @@ if (theta[12] * theta[15] - theta[13]^2 < 0) {
   return(list(CI= as.matrix(CI)))
 }
 
-  
-}
 
 
