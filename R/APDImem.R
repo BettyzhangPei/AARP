@@ -6,16 +6,16 @@
 #' We employ the moment estimation method to the complete longitudinal data structure. Moreover, our method can provide the estimates of fixed effects including intake-related biases in the FFQ and overall biases of true intake for the FFQ and 24HR, respectively in the model.
 #' Notably, the correlations with true intake and attenuation factors for energy-adjusted should be interpreted on the scale to which each particular nutrient was transformed.
 #'
-#'
-#' @param data data has to be complete data.
-#' @param Q.N.1: An assessment instrument for nutrient (N) at time 1.
-#' @param Q.N.2: An assessment instrument for nutrient (N) at time 2.
-#' @param Q.E.1: An assessment instrument for total energy (E) at time 1.
-#' @param Q.E.2: An assessment instrument for total energy (E) at time 2.
-#' @param F.N.1: A reference instrument for nutrient (N) at time 1.
-#' @param F.N.2: A reference instrument for nutrient (N) at time 2.
-#' @param F.E.1: A reference instrument for total energy (E) at time 1.
-#' @param F.E.2: A reference instrument for total energy (E) at time 2.
+#' The input vectors must represent complete data. Missing values (NA) are not allowed.
+#' All variables should have the same length corresponding to the number of individuals.
+#' @param Q.N.1 An assessment instrument for nutrient (N) at time 1.
+#' @param Q.N.2 An assessment instrument for nutrient (N) at time 2.
+#' @param Q.E.1 An assessment instrument for total energy (E) at time 1.
+#' @param Q.E.2 An assessment instrument for total energy (E) at time 2.
+#' @param F.N.1 A reference instrument for nutrient (N) at time 1.
+#' @param F.N.2 A reference instrument for nutrient (N) at time 2.
+#' @param F.E.1 A reference instrument for total energy (E) at time 1.
+#' @param F.E.2 A reference instrument for total energy (E) at time 2.
 #'
 #'
 #'
@@ -43,15 +43,19 @@
 #'
 #'
 #' @importFrom stats sd
+#' @importFrom MASS mvrnorm
 #' @examples
 #' ## example using random numbers
 #'
-#' library(MASS)
+#'
 #' set.seed(1)
 #' # number of observed individuals:
 #' I<- 100
 #' # fixed effects in the measurement error model:
-#' # beta = (beta_N0_1, beta_N0_2, beta_N1, beta_E0_1, beta_E0_2, beta_E1), beta_N1= theta5/theta12, beta_E1 = theta10/theta15
+#' # beta = (beta_N0_1, beta_N0_2, beta_N1,
+#' #         beta_E0_1, beta_E0_2, beta_E1),
+#' # beta_N1= theta5/theta12
+#' # beta_E1 = theta10/theta15
 #' beta<-  c(0.4, 0.5, 0.175/0.35,0.32,0.3, 0.232/0.3)
 #' # mu_1 = (mu_T_N, mu_T_E, mu_N0_2, mu_E0_2)
 #' mu_1<-  c(0.3,0.32,0.4,0.35)
@@ -67,23 +71,50 @@
 #' mu[8]<- mu_1[4] + mu_1[2]
 #' # second moments:
 #' # theta = (theta1, theta2, ..., theta15)
-#' # we notice that theta1, theta7, theta11, theta12, theta14, theta15 are variance components, then they should be set as positive numbers.
+#' # we notice that theta1, theta7, theta11, theta12, theta14, theta15 are variance components,
+#' # then they should be set as positive numbers.
 #' theta<- rep(0,15)
 #' # the setting of theta:
 #' theta<- c(0.5, 0, 0, 0, 0.175, 0, 0.58, 0, 0, 0.232, 0.5, 0.35, 0 , 0.55 ,0.3)
-#' theta_set<- c(theta[1], theta[2], theta[3], theta[4], theta[5], theta[5], theta[6], theta[6], theta[2], theta[1], theta[4], theta[3], theta[5], theta[5], theta[6], theta[6],
-#'              theta[3], theta[4], theta[7], theta[8], theta[9], theta[9], theta[10], theta[10], theta[4], theta[3], theta[8], theta[7], theta[9], theta[9], theta[10], theta[10],
-#'              theta[5], theta[5], theta[9], theta[9], theta[11], theta[12], theta[13],theta[13],
-#'              theta[5], theta[5], theta[9], theta[9], theta[12], theta[11], theta[13],theta[13],
-#'              theta[6], theta[6], theta[10], theta[10], theta[13], theta[13], theta[14], theta[15], theta[6], theta[6],theta[10], theta[10], theta[13], theta[13], theta[15], theta[14])
+#' theta_set<- c(theta[1], theta[2], theta[3], theta[4],
+#'               theta[5], theta[5], theta[6], theta[6],
+#'               theta[2], theta[1], theta[4], theta[3],
+#'               theta[5], theta[5], theta[6], theta[6],
+#'               theta[3], theta[4], theta[7], theta[8],
+#'               theta[9], theta[9], theta[10], theta[10],
+#'               theta[4], theta[3], theta[8], theta[7],
+#'               theta[9], theta[9], theta[10], theta[10],
+#'               theta[5], theta[5], theta[9], theta[9],
+#'               theta[11], theta[12], theta[13],theta[13],
+#'               theta[5], theta[5], theta[9], theta[9],
+#'               theta[12], theta[11], theta[13],theta[13],
+#'               theta[6], theta[6], theta[10], theta[10],
+#'               theta[13], theta[13], theta[14], theta[15],
+#'               theta[6], theta[6],theta[10], theta[10],
+#'               theta[13], theta[13], theta[15], theta[14])
 #' # variance covariance matrix of D_i
-# Sigma<- matrix(theta_set, 8, 8)
+#' Sigma<- matrix(theta_set, nrow=8, ncol=8)
+#'
 #' # the observed data:
 #' D<- matrix(0, nrow=8 , ncol=I)
-#' D<- t(as.matrix(mvrnorm(I, mu, Sigma)))
+#' D<- t(as.matrix(MASS::mvrnorm(I, mu, Sigma)))
 #' Data<- data.frame(t(D))
-#' colnames(Data)<- c("FFQ.N.1","FFQ.N.2", "FFQ.E.1", "FFQ.E.2", "Ref.N.1", "Ref.N.2","Ref.E.1", "Ref.E.2")
-#' ex1<- NME(Q.N.1=Data$FFQ.N.1, Q.N.2=Data$FFQ.N.2, Q.E.1= Data$FFQ.E.1, Q.E.2= Data$FFQ.E.2, F.N.1= Data$Ref.N.1, F.N.2= Data$Ref.N.2, F.E.1= Data$Ref.E.1, F.E.2= Data$Ref.E.2)
+#' colnames(Data)<- c(
+#' "FFQ.N.1","FFQ.N.2",
+#' "FFQ.E.1", "FFQ.E.2",
+#' "Ref.N.1", "Ref.N.2",
+#' "Ref.E.1", "Ref.E.2"
+#' )
+#'
+#' ex1<- NME(
+#'  Q.N.1=Data$FFQ.N.1,
+#'  Q.N.2=Data$FFQ.N.2,
+#'  Q.E.1= Data$FFQ.E.1,
+#'  Q.E.2= Data$FFQ.E.2,
+#'  F.N.1= Data$Ref.N.1,
+#'  F.N.2= Data$Ref.N.2,
+#'  F.E.1= Data$Ref.E.1,
+#'  F.E.2= Data$Ref.E.2)
 #' print(ex1)
 #'
 #' @references Thompson, F. E., Kipnis, V., Midthune, D., Freedman, L.S., Carroll, R.J., Subar, A.F., Brown, C.C., Butcher, M.S.,  Mouw, T., Leitzmann, M. and Schatzkin, A. (2008) Performance of a food-frequency questionnaire in the us NIH--AARP (National Institutes of Health--American Association of Retired Persons) Diet and Health Study. \emph{Public Health Nutrition}, 11, 183-195.
@@ -177,13 +208,16 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
 
      # other unknown fixed parameters in the model:
     est.fix.par<- rep(0,10)
-    
+
+
+    # estimated beta_N1:
+    est.fix.par[3]<- est.theta[5]/est.theta[12]
+
     # estimated beta_N0_1:
     est.fix.par[1]<-  mean(D[1,]) - est.fix.par[1]*est.fix.par[3]
     #  estimated beta_N0_2:
     est.fix.par[2]<- mean(D[2,]) - est.fix.par[1]*est.fix.par[3]
-    # estimated beta_N1:
-    est.fix.par[3]<- est.theta[5]/est.theta[12]
+
     # estimated beta_E0_1:
     est.fix.par[4]<- mean(D[3,]) - est.fix.par[2]*est.fix.par[4]
     # estimated beta_E0_2:
@@ -198,9 +232,9 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
     est.fix.par[9]<- mean(D[6,]) - mean(D[5,])
     # estimated mu_E0_2:
     est.fix.par[10]<- mean(D[8,]) - mean(D[7,])
-     
+
   est.fix.par<- data.frame(est.fix.par)
-  
+
   rownames(est.fix.par) <- c("Beta.N0.1", "Beta.N0.2", "Beta.N1", "Beta.E0.1","Beta.E0.2", "Beta.E1", "Mu.T.N",  "Mu.T.E", "Mu.N0.2", "Mu.E0.2")
 
   return(list(est.coefficients= as.matrix(est.coeff), est.theta= as.matrix(est.theta), est.covariance.matrix= est.cov.mat, est.fix.parameters= as.matrix(est.fix.par)))
@@ -221,11 +255,11 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
 # If this condition is violated, we enforce a conservative adjustment by
 # replacing theta[13] with the minimum of theta[12], theta[13], and theta[15].
 
-if (theta[12] * theta[15] - theta[13]^2 < 0) {
+if (theta[12] * theta[15] - (theta[13])^2 < 0) {
   theta[13] <- min(theta[12], theta[13], theta[15])
 }
 
-  
+
 # mu = first moments:  the mean vector of D_i
   # second moments:
   # theta = (theta1, theta2, ..., theta15)
@@ -238,44 +272,49 @@ if (theta[12] * theta[15] - theta[13]^2 < 0) {
   mu[6]<- mu_1[3] + mu_1[1]
   mu[7]<- mu_1[2]
   mu[8]<- mu_1[4] + mu_1[2]
-  
-  
-  
+
+
+
   theta_set<- c(theta[1], theta[2], theta[3], theta[4], theta[5], theta[5], theta[6], theta[6], theta[2], theta[1], theta[4], theta[3], theta[5], theta[5], theta[6], theta[6],
                 theta[3], theta[4], theta[7], theta[8], theta[9], theta[9], theta[10], theta[10], theta[4], theta[3], theta[8], theta[7], theta[9], theta[9], theta[10], theta[10],
                 theta[5], theta[5], theta[9], theta[9], theta[11], theta[12], theta[13],theta[13],
                 theta[5], theta[5], theta[9], theta[9], theta[12], theta[11], theta[13],theta[13],
                 theta[6], theta[6], theta[10], theta[10], theta[13], theta[13], theta[14], theta[15], theta[6], theta[6],theta[10], theta[10], theta[13], theta[13], theta[15], theta[14])
+
   # variance covariance matrix of D_i
-  Sigma<- matrix(theta_set, 8, 8)
-  
+  Sigma<- matrix(theta_set, nrow=8, ncol=8)
+
   M<-1000 # number of repetitions
   coefficients_M<- matrix(0, 6, M )
-  
-  for (a in 1: M) 
+
+  for (a in 1: M)
   {
     set.seed(a)
     D2<- matrix(0, nrow=8 , ncol=I)
-    D2<- t(as.matrix(mvrnorm(I, mu, Sigma)))
+    D2<- t(as.matrix(MASS::mvrnorm(I, mu, Sigma)))
     ex1<- NME1(D2)
     coefficients_M[, a]<- as.numeric(ex1$est.coefficients)
   }
-  
+
   CI<- matrix(0, nrow=6, ncol=3)
   for (i in 1:6)
   {
     CI[i, 2]<-  mean(coefficients_M[i,])  - 1.96 *sd(coefficients_M[i,])/sqrt(M)
     CI[i, 3]<-  mean(coefficients_M[i,])  + 1.96 *sd(coefficients_M[i,])/sqrt(M)
   }
-  
+
   CI[,1]<- as.numeric(ex$est.coefficients)
-  
+
   CI<- data.frame(CI)
   rownames(CI)<-  c("Rho.N", "Lambda.N", "Rho.E",  "Lambda.E", "Rho.R",  "Lambda.R")
   colnames(CI)<-  c("Estimation", "lower bound of 95% CI", "upper bound of 95% CI")
-  
+
   return(list(CI= as.matrix(CI)))
+
 }
+
+
+
 
 
 

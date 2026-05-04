@@ -7,23 +7,21 @@
 NME(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
 }
 \arguments{
-\item{data}{data has to be complete data.}
+\item{Q.N.1}{An assessment instrument for nutrient (N) at time 1.}
 
-\item{Q.N.1:}{An assessment instrument for nutrient (N) at time 1.}
+\item{Q.N.2}{An assessment instrument for nutrient (N) at time 2.}
 
-\item{Q.N.2:}{An assessment instrument for nutrient (N) at time 2.}
+\item{Q.E.1}{An assessment instrument for total energy (E) at time 1.}
 
-\item{Q.E.1:}{An assessment instrument for total energy (E) at time 1.}
+\item{Q.E.2}{An assessment instrument for total energy (E) at time 2.}
 
-\item{Q.E.2:}{An assessment instrument for total energy (E) at time 2.}
+\item{F.N.1}{A reference instrument for nutrient (N) at time 1.}
 
-\item{F.N.1:}{A reference instrument for nutrient (N) at time 1.}
+\item{F.N.2}{A reference instrument for nutrient (N) at time 2.}
 
-\item{F.N.2:}{A reference instrument for nutrient (N) at time 2.}
+\item{F.E.1}{A reference instrument for total energy (E) at time 1.}
 
-\item{F.E.1:}{A reference instrument for total energy (E) at time 1.}
-
-\item{F.E.2:}{A reference instrument for total energy (E) at time 2.}
+\item{F.E.2}{A reference instrument for total energy (E) at time 2.}
 }
 \value{
 \item{Rho.N}{correlation coefficient between reported and true intake of nutrient N.}
@@ -52,17 +50,23 @@ A package for estimating both of the correlations of a dietary assessment instru
 The model is established as the measurement error model to evaluate the data collected by a food-frequency questionnaire (FFQ) using two non-consecutive 24-hour dietary recalls (24HRs) as the reference.
 We employ the moment estimation method to the complete longitudinal data structure. Moreover, our method can provide the estimates of fixed effects including intake-related biases in the FFQ and overall biases of true intake for the FFQ and 24HR, respectively in the model.
 Notably, the correlations with true intake and attenuation factors for energy-adjusted should be interpreted on the scale to which each particular nutrient was transformed.
+
+The input vectors must represent complete data. Missing values (NA) are not allowed.
+All variables should have the same length corresponding to the number of individuals.
 }
 \examples{
 ## example using random numbers
 
-library(MASS)
+
 set.seed(1)
 # number of observed individuals:
 I<- 100
 # fixed effects in the measurement error model:
-# beta = (beta_N0_1, beta_N0_2, beta_N1, beta_E0_1, beta_E0_2, beta_E1)
-beta<-  c(0.4, 0.5, 0.3,0.32,0.3,0.35)
+# beta = (beta_N0_1, beta_N0_2, beta_N1,
+#         beta_E0_1, beta_E0_2, beta_E1),
+# beta_N1= theta5/theta12
+# beta_E1 = theta10/theta15
+beta<-  c(0.4, 0.5, 0.175/0.35,0.32,0.3, 0.232/0.3)
 # mu_1 = (mu_T_N, mu_T_E, mu_N0_2, mu_E0_2)
 mu_1<-  c(0.3,0.32,0.4,0.35)
 # mu = first moments:  the mean vector of D_i
@@ -77,22 +81,50 @@ mu[7]<- mu_1[2]
 mu[8]<- mu_1[4] + mu_1[2]
 # second moments:
 # theta = (theta1, theta2, ..., theta15)
-# we notice that theta1, theta7, theta11, theta12, theta14, theta15 are variance components, then they should be set as positive numbers.
+# we notice that theta1, theta7, theta11, theta12, theta14, theta15 are variance components,
+# then they should be set as positive numbers.
 theta<- rep(0,15)
 # the setting of theta:
-theta<- c(0.5, 0, 0, 0, 0.175 , 0, 0.58, 0, 0, 0.232, 0.5, 0.35, 0 , 0.55 ,0.3)
-theta_set<- c(theta[1], theta[2], theta[3], theta[4], theta[5], theta[5], theta[6], theta[6], theta[2], theta[1], theta[4], theta[3], theta[5], theta[5], theta[6], theta[6],
-             theta[3], theta[4], theta[7], theta[8], theta[9], theta[9], theta[10], theta[10], theta[4], theta[3], theta[8], theta[7], theta[9], theta[9], theta[10], theta[10],
-             theta[5], theta[5], theta[9], theta[9], theta[11], theta[12], theta[13],theta[13],
-             theta[5], theta[5], theta[9], theta[9], theta[12], theta[11], theta[13],theta[13],
-             theta[6], theta[6], theta[10], theta[10], theta[13], theta[13], theta[14], theta[15], theta[6], theta[6],theta[10], theta[10], theta[13], theta[13], theta[15], theta[14])
+theta<- c(0.5, 0, 0, 0, 0.175, 0, 0.58, 0, 0, 0.232, 0.5, 0.35, 0 , 0.55 ,0.3)
+theta_set<- c(theta[1], theta[2], theta[3], theta[4],
+              theta[5], theta[5], theta[6], theta[6],
+              theta[2], theta[1], theta[4], theta[3],
+              theta[5], theta[5], theta[6], theta[6],
+              theta[3], theta[4], theta[7], theta[8],
+              theta[9], theta[9], theta[10], theta[10],
+              theta[4], theta[3], theta[8], theta[7],
+              theta[9], theta[9], theta[10], theta[10],
+              theta[5], theta[5], theta[9], theta[9],
+              theta[11], theta[12], theta[13],theta[13],
+              theta[5], theta[5], theta[9], theta[9],
+              theta[12], theta[11], theta[13],theta[13],
+              theta[6], theta[6], theta[10], theta[10],
+              theta[13], theta[13], theta[14], theta[15],
+              theta[6], theta[6],theta[10], theta[10],
+              theta[13], theta[13], theta[15], theta[14])
 # variance covariance matrix of D_i
+Sigma<- matrix(theta_set, nrow=8, ncol=8)
+
 # the observed data:
 D<- matrix(0, nrow=8 , ncol=I)
-D<- t(as.matrix(mvrnorm(I, mu, Sigma)))
+D<- t(as.matrix(MASS::mvrnorm(I, mu, Sigma)))
 Data<- data.frame(t(D))
-colnames(Data)<- c("FFQ.N.1","FFQ.N.2", "FFQ.E.1", "FFQ.E.2", "Ref.N.1", "Ref.N.2","Ref.E.1", "Ref.E.2")
-ex1<- NME(Q.N.1=Data$FFQ.N.1, Q.N.2=Data$FFQ.N.2, Q.E.1= Data$FFQ.E.1, Q.E.2= Data$FFQ.E.2, F.N.1= Data$Ref.N.1, F.N.2= Data$Ref.N.2, F.E.1= Data$Ref.E.1, F.E.2= Data$Ref.E.2)
+colnames(Data)<- c(
+"FFQ.N.1","FFQ.N.2",
+"FFQ.E.1", "FFQ.E.2",
+"Ref.N.1", "Ref.N.2",
+"Ref.E.1", "Ref.E.2"
+)
+
+ex1<- NME(
+ Q.N.1=Data$FFQ.N.1,
+ Q.N.2=Data$FFQ.N.2,
+ Q.E.1= Data$FFQ.E.1,
+ Q.E.2= Data$FFQ.E.2,
+ F.N.1= Data$Ref.N.1,
+ F.N.2= Data$Ref.N.2,
+ F.E.1= Data$Ref.E.1,
+ F.E.2= Data$Ref.E.2)
 print(ex1)
 
 }
