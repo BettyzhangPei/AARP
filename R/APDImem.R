@@ -206,7 +206,7 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
   return(list(est.coefficients= as.matrix(est.coeff), est.theta= as.matrix(est.theta), est.covariance.matrix= est.cov.mat, est.fix.parameters= as.matrix(est.fix.par)))
 }
 
-# I = number of individuals
+  # I = number of individuals
   # fixed effects in the measurement error model:
   # beta = (beta_N0_1, beta_N0_2, beta_N1, beta_E0_1, beta_E0_2, beta_E1)
   # mu_1 = (mu_T_N, mu_T_E, mu_N0_2, mu_E0_2)
@@ -216,6 +216,16 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
   mu_1<- as.numeric(ex$est.fix.parameters[7:10])
   theta<- as.numeric(ex$est.theta)
 
+# Note: Under the restrictive assumptions in Thompson et al. (2008),
+# the quantity theta[12] * theta[15] - theta[13]^2 is not guaranteed to be positive.
+# If this condition is violated, we enforce a conservative adjustment by
+# replacing theta[13] with the minimum of theta[12], theta[13], and theta[15].
+
+if (theta[12] * theta[15] - theta[13]^2 < 0) {
+  theta[13] <- min(theta[12], theta[13], theta[15])
+}
+
+  
 # mu = first moments:  the mean vector of D_i
   # second moments:
   # theta = (theta1, theta2, ..., theta15)
