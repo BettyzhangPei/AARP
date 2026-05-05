@@ -44,8 +44,13 @@ where
 3. Following Thompson et al. (2008), nutrients and energy are measured twice for each Q and F.
    
 # References
+
+Loftfield, E., Zhang, P., O’Connell, C.P., Kahle, L.L., Herrick, K., Abar, L., Khandpur, N., Steele, E.M. and Hong, H.G. (2025) Performance of a food frequency questionnaire for estimating ultraprocessed food intake according to the Nova Classification System in the United States NIH-AARP Diet and Health Study. The Journal of Nutrition, 155(7), pp.2376-2384.
+
 Thompson, F.E., Kipnis, V., Midthune D., Freedman, L.S., Carroll, R.J., Subar, A.F., Brown, C.C., Butcher, M.S., Mouw, T., Leitzmann, M., Schatzkin, A.(2008) Performance of a food-frequency questionnaire in the US NIH-AARP (National Institutes of Health-American Association of Retired Persons) Diet and Health Study. Public Health Nutrition, 11(2): 183-95.
 
 Carroll, R.J., Midthune, D., Freedman, L. S., and Kipnis, V. (2006) Seemingly unrelated measurement error models,
 with application to nutritional epidemiology. Biometrics, 62(1):75–84
+
+
    
