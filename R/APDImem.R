@@ -173,6 +173,16 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
   est.theta[15] <-  (sum( ((D[7,]- mean(D[7,])) * (D[8,]- mean(D[8,])) )) /((I-1)))
 
 
+  # Note: Under the restrictive assumptions in Thompson et al. (2008),
+  # the quantity theta[12] * theta[15] - theta[13]^2 is not guaranteed to be positive.
+  # If this condition is violated, we enforce a conservative adjustment by
+  # replacing theta[13] with the minimum of theta[12], theta[13], and theta[15].
+  if (est.theta[12] * est.theta[15] - (est.theta[13])^2 < 0) {
+    est.theta[13] <- min(est.theta[12], est.theta[13], est.theta[15])
+  }
+
+
+     
   est.theta.set<- c(est.theta[1], est.theta[2], est.theta[3], est.theta[4], est.theta[5], est.theta[5], est.theta[6], est.theta[6], est.theta[2], est.theta[1], est.theta[4], est.theta[3], est.theta[5], est.theta[5], est.theta[6], est.theta[6],
                     est.theta[3], est.theta[4], est.theta[7], est.theta[8], est.theta[9], est.theta[9], est.theta[10], est.theta[10], est.theta[4], est.theta[3], est.theta[8], est.theta[7], est.theta[9], est.theta[9], est.theta[10], est.theta[10],
                     est.theta[5], est.theta[5], est.theta[9], est.theta[9], est.theta[11], est.theta[12], est.theta[13],est.theta[13],
