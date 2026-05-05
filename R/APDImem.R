@@ -260,15 +260,6 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
   mu_1<- as.numeric(ex$est.fix.parameters[7:10])
   theta<- as.numeric(ex$est.theta)
 
-# Note: Under the restrictive assumptions in Thompson et al. (2008),
-# the quantity theta[12] * theta[15] - theta[13]^2 is not guaranteed to be positive.
-# If this condition is violated, we enforce a conservative adjustment by
-# replacing theta[13] with the minimum of theta[12], theta[13], and theta[15].
-
-if (theta[12] * theta[15] - (theta[13])^2 < 0) {
-  theta[13] <- min(theta[12], theta[13], theta[15])
-}
-
 
 # mu = first moments:  the mean vector of D_i
   # second moments:
