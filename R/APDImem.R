@@ -300,14 +300,17 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
   }
 
   CI<- matrix(0, nrow=6, ncol=3)
-  for (i in 1:6)
-  {
-    CI[i, 2]<-  mean(coefficients_M[i,])  - 1.96 *sd(coefficients_M[i,])/sqrt(M)
-    CI[i, 3]<-  mean(coefficients_M[i,])  + 1.96 *sd(coefficients_M[i,])/sqrt(M)
-  }
 
   CI[,1]<- as.numeric(ex$est.coefficients)
 
+  CI<- matrix(0, nrow=6, ncol=3)
+  for (i in 1:6)
+  {
+    CI[i, 2]<-  CI[i,1]    - 1.96 *sd(coefficients_M[i,])
+    CI[i, 3]<-  CI[i,1]    + 1.96 *sd(coefficients_M[i,]) 
+  }
+
+  
   CI<- data.frame(CI)
   rownames(CI)<-  c("Rho.N", "Lambda.N", "Rho.E",  "Lambda.E", "Rho.R",  "Lambda.R")
   colnames(CI)<-  c("Estimation", "lower bound of 95% CI", "upper bound of 95% CI")
