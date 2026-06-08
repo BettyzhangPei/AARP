@@ -16,7 +16,7 @@
 #' @param F.N.2 A reference instrument for nutrient (N) at time 2.
 #' @param F.E.1 A reference instrument for total energy (E) at time 1.
 #' @param F.E.2 A reference instrument for total energy (E) at time 2.
-#'
+#' @param ci.method Method for confidence intervals. "normal" uses a normal approximation with Fisher transformation for correlation coefficients. "percentile" uses bootstrap percentiles.
 #'
 #'
 #' @return
@@ -119,7 +119,7 @@
 #'
 #' @references Thompson, F. E., Kipnis, V., Midthune, D., Freedman, L.S., Carroll, R.J., Subar, A.F., Brown, C.C., Butcher, M.S.,  Mouw, T., Leitzmann, M. and Schatzkin, A. (2008) Performance of a food-frequency questionnaire in the us NIH--AARP (National Institutes of Health--American Association of Retired Persons) Diet and Health Study. \emph{Public Health Nutrition}, 11, 183-195.
 #' @export
-NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method = c("normal", "percentile")))
+NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method = c("normal", "percentile"))
 {
   ci.method <- match.arg(ci.method)
   
