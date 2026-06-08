@@ -300,21 +300,23 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
     coefficients_M[, a]<- as.numeric(ex1$est.coefficients)
   }
 
-  CI<- matrix(0, nrow=6, ncol=3)
+ CI <- matrix(NA_real_, nrow=6, ncol=3)
 
-  CI[,1]<- as.numeric(ex$est.coefficients)
+theta_hat <- as.numeric(ex$est.coefficients)
+CI[,1] <- theta_hat
 
-  CI<- matrix(0, nrow=6, ncol=3)
-  for (i in 1:6)
-  {
-    CI[i, 2]<-  CI[i,1]    - 1.96 *sd(coefficients_M[i,])
-    CI[i, 3]<-  CI[i,1]    + 1.96 *sd(coefficients_M[i,]) 
-  }
+for (i in 1:6)
+{
+  vals <- coefficients_M[i, ]
+  vals <- vals[is.finite(vals)]
 
-  
-  CI<- data.frame(CI)
-  rownames(CI)<-  c("Rho.N", "Lambda.N", "Rho.E",  "Lambda.E", "Rho.R",  "Lambda.R")
-  colnames(CI)<-  c("Estimation", "lower bound of 95% CI", "upper bound of 95% CI")
+  CI[i, 2] <- theta_hat[i] - 1.96 * sd(vals)
+  CI[i, 3] <- theta_hat[i] + 1.96 * sd(vals)
+}
+
+CI <- data.frame(CI)
+rownames(CI) <- c("Rho.N", "Lambda.N", "Rho.E", "Lambda.E", "Rho.R", "Lambda.R")
+colnames(CI) <- c("Estimation", "lower bound of 95% CI", "upper bound of 95% CI")
 
   return(list(CI= as.matrix(CI)))
 
