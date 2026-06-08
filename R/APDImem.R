@@ -119,9 +119,10 @@
 #'
 #' @references Thompson, F. E., Kipnis, V., Midthune, D., Freedman, L.S., Carroll, R.J., Subar, A.F., Brown, C.C., Butcher, M.S.,  Mouw, T., Leitzmann, M. and Schatzkin, A. (2008) Performance of a food-frequency questionnaire in the us NIH--AARP (National Institutes of Health--American Association of Retired Persons) Diet and Health Study. \emph{Public Health Nutrition}, 11, 183-195.
 #' @export
-NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
+NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method = c("normal", "percentile")))
 {
-
+  ci.method <- match.arg(ci.method)
+  
   data<- data.frame(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2 )
   data<- as.matrix(data)
 
@@ -365,7 +366,13 @@ theta_hat <- as.numeric(ex$est.coefficients)
     }
   }
 
- return(list(CI=CI)
+
+  CI <- data.frame(CI)
+  rownames(CI) <- c("Rho.N", "Lambda.N", "Rho.E", "Lambda.E", "Rho.R", "Lambda.R")
+  colnames(CI) <- c("Estimation", "lower bound of 95% CI", "upper bound of 95% CI")
+
+  return(list(CI = as.matrix(CI)))
+
 
 }
 
