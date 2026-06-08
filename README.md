@@ -25,8 +25,7 @@ The `NEM` function provides estimates based on various types of input nutrients.
 NME(Q.N.1= FFQ.Protein.1, Q.N.2= FFQ.Protein.2,
  Q.E.1= FFQ.Energy.1, Q.E.2= FFQ.Energy.2,
  F.N.1= Ref.Protein.1, F.N.2= Ref.Protein.2,
- F.E.1= Ref.Energy.1, F.E.2= Ref.Energy.2,
- data=input_data)
+ F.E.1= Ref.Energy.1, F.E.2= Ref.Energy.2,ci.method="normal")
 ```
 where
 - Q.N.1: An assessment instrument for nutrient (N) at time 1.
@@ -37,11 +36,14 @@ where
 - F.N.2: A reference instrument for nutrient (N) at time 2.
 - F.E.1: A reference instrument for total energy (E) at time 1.
 - F.E.2: A reference instrument for total energy (E) at time 2.
+- ci.method: confidence interval method. "normal" uses a normal approximation, with Fisher transformation for correlation coefficients; "percentile" uses bootstrap percentiles.
 
 # Usage Notes
 1. We recommend transforming each variable (e.g., using a log transformation) to approximate a normal distribution before applying our functions.
 2. Our calculations assume there is no missing data in the dataset.
 3. Following Thompson et al. (2008), nutrients and energy are measured twice for each Q and F.
+4. Confidence intervals for validity coefficients are constrained to the correlation scale. When `ci.method = "normal"`, Fisher transformation is used for `Rho.N`, `Rho.E`, and `Rho.R`.
+
    
 # References
 
