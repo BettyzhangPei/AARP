@@ -300,25 +300,72 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2)
     coefficients_M[, a]<- as.numeric(ex1$est.coefficients)
   }
 
- CI <- matrix(NA_real_, nrow=6, ncol=3)
-
 theta_hat <- as.numeric(ex$est.coefficients)
-CI[,1] <- theta_hat
+  CI <- matrix(
+    NA_real_,
+    nrow = 6,
+    ncol = 3,
+    dimnames = list(
+      rownames(ex$est.coefficients),
+      c("Estimation", "lower bound of 95% CI", "upper bound of 95% CI")
+    )
+  )
+  CI[, 1] <- theta_hat
+  correlation.rows <- c(1L, 3L, 5L)
+  fisher.normal.ci <- function(theta, vals) {
+    vals <- vals[is.finite(vals) & vals > -1 & vals < 1]
 
-for (i in 1:6)
-{
-  vals <- coefficients_M[i, ]
-  vals <- vals[is.finite(vals)]
+    if (!is.finite(theta) || theta <= -1 || theta >= 1 || length(vals) < 2L) {
+      return(c(NA_real_, NA_real_))
+    }
 
-  CI[i, 2] <- theta_hat[i] - 1.96 * sd(vals)
-  CI[i, 3] <- theta_hat[i] + 1.96 * sd(vals)
-}
+    z.hat <- atanh(theta)
+    z.se <- stats::sd(atanh(vals))
+    tanh(c(z.hat - 1.96 * z.se, z.hat + 1.96 * z.se))
+  }
 
-CI <- data.frame(CI)
-rownames(CI) <- c("Rho.N", "Lambda.N", "Rho.E", "Lambda.E", "Rho.R", "Lambda.R")
-colnames(CI) <- c("Estimation", "lower bound of 95% CI", "upper bound of 95% CI")
+  for (i in seq_len(6)) {
+    vals <- coefficients_M[i, ]
+    vals <- vals[is.finite(vals)]
 
-  return(list(CI= as.matrix(CI)))
+    if (length(vals) < 2L) {
+      warning(
+        sprintf("Too few finite bootstrap estimates for %s; CI set to NA.", rownames(CI)[i]),
+        call. = FALSE
+      )
+      next
+    }
+
+    if (ci.method == "normal") {
+      if (i %in% correlation.rows) {
+        CI[i, 2:3] <- fisher.normal.ci(theta_hat[i], vals)
+        if (anyNA(CI[i, 2:3])) {
+          warning(
+            sprintf("Too few valid bounded bootstrap estimates for %s; CI set to NA.", rownames(CI)[i]),
+            call. = FALSE
+          )
+        }
+      } else {
+        boot.se <- stats::sd(vals)
+        CI[i, 2] <- theta_hat[i] - 1.96 * boot.se
+        CI[i, 3] <- theta_hat[i] + 1.96 * boot.se
+      }
+    } else {
+      if (i %in% correlation.rows) {
+        vals <- vals[vals >= -1 & vals <= 1]
+      }
+      if (length(vals) < 2L) {
+        warning(
+          sprintf("Too few finite bootstrap estimates for %s; CI set to NA.", rownames(CI)[i]),
+          call. = FALSE
+        )
+        next
+      }
+      CI[i, 2:3] <- stats::quantile(vals, c(0.025, 0.975), names = FALSE)
+    }
+  }
+
+ return(list(CI=CI)
 
 }
 
