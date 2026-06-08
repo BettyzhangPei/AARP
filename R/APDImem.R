@@ -176,12 +176,13 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
 
   # Note: Under the restrictive assumptions in Thompson et al. (2008),
   # the quantity theta[12] * theta[15] - theta[13]^2 is not guaranteed to be positive.
+  # If the term is negative, then we set theta[13]  as the minimum of est.theta[12], est.theta[13], est.theta[15].   
   if (est.theta[12] * est.theta[15] - (est.theta[13])^2 < 0) {
-    # est.theta[13] <- min(est.theta[12], est.theta[13], est.theta[15])
-     cat(sprintf(
-      "Warning: non-PSD block: theta12=%.6f theta13=%.6f theta15=%.6f\n",
-      est.theta[12], est.theta[13], est.theta[15]
-    ))
+     #  cat(sprintf(
+     #  "Warning: non-PSD block: theta12=%.6f theta13=%.6f theta15=%.6f\n",
+     #  est.theta[12], est.theta[13], est.theta[15]
+     #  ))
+     est.theta[13] <- min(est.theta[12], est.theta[13], est.theta[15])
   }
 
 
