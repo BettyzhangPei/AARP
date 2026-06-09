@@ -137,7 +137,7 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
   # Total number of individuals:
   I <- dim(D)[2]
 
-   NME1<- function(D)
+   NME1<- function(D, warn=TRUE)
   {
 
   est.theta<- rep(0,15)
@@ -176,18 +176,18 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
 
   # Note: Under the restrictive assumptions in Thompson et al. (2008),
   # the quantity theta[12] * theta[15] - theta[13]^2 is not guaranteed to be positive.
-  # If the term is negative, then we set theta[13]  as min(cov(FN1, FE1), cov(FN1, FE2), cov(FN2, FE1), cov(FN2, FE2)).  
+  # If the term is negative, then we set theta[13] as min(cov(FN1, FE1), cov(FN1, FE2), cov(FN2, FE1), cov(FN2, FE2)).  
   if (est.theta[12] * est.theta[15] - (est.theta[13])^2 <= 0) {
    cov.FN1.FE1 <- sum((D[5,] - mean(D[5,])) * (D[7,] - mean(D[7,]))) / (I - 1)
    cov.FN1.FE2 <- sum((D[5,] - mean(D[5,])) * (D[8,] - mean(D[8,]))) / (I - 1)
    cov.FN2.FE1 <- sum((D[6,] - mean(D[6,])) * (D[7,] - mean(D[7,]))) / (I - 1)
    cov.FN2.FE2 <- sum((D[6,] - mean(D[6,])) * (D[8,] - mean(D[8,]))) / (I - 1)
     
-    est.theta[13] <- min(cov.FN1.FE1, cov.FN1.FE2, cov.FN2.FE1, cov.FN2.FE2)
+  est.theta[13] <- min(cov.FN1.FE1, cov.FN1.FE2, cov.FN2.FE1, cov.FN2.FE2)
   }
 
 
- if (est.theta[12] * est.theta[15] - est.theta[13]^2 <= 0) {
+ if (warn && est.theta[12] * est.theta[15] - est.theta[13]^2 <= 0) {
   warning("Residual reference covariance block remains non-positive after theta13 adjustment.")
 }
      
@@ -227,7 +227,10 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
   bad.rho <- !is.finite(est.coeff[rho.rows]) | abs(est.coeff[rho.rows]) > 1
   est.coeff[rho.rows[bad.rho]] <- NA_real_
 
-
+   true.resid.block <- est.theta[12] * est.theta[15] - est.theta[13]^2
+   if (true.resid.block <= 0) {
+    est.coeff[5:6] <- NA_real_
+   }
 
      
   est.coeff<- data.frame(est.coeff)
@@ -273,7 +276,7 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
   # beta = (beta_N0_1, beta_N0_2, beta_N1, beta_E0_1, beta_E0_2, beta_E1)
   # mu_1 = (mu_T_N, mu_T_E, mu_N0_2, mu_E0_2)
   # est.coefficients: estimated correlation coefficients and attenuation factors
-  ex<- NME1(D)
+  ex<- NME1(D, warn=TRUE)
   beta<- as.numeric(ex$est.fix.parameters[1:6])
   mu_1<- as.numeric(ex$est.fix.parameters[7:10])
   theta<- as.numeric(ex$est.theta)
@@ -311,7 +314,7 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
     set.seed(a)
     D2<- matrix(0, nrow=8 , ncol=I)
     D2<- t(as.matrix(MASS::mvrnorm(I, mu, Sigma)))
-    ex1<- NME1(D2)
+    ex1<- NME1(D2,warn=FALSE)
     coefficients_M[, a]<- as.numeric(ex1$est.coefficients)
   }
 
