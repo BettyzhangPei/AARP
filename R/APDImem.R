@@ -189,7 +189,9 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
 
  if (warn && est.theta[12] * est.theta[15] - est.theta[13]^2 <= 0) {
   warning("Residual reference covariance block remains non-positive after theta13 adjustment.")
+   est.theta[13] = 
 }
+     
      
   est.theta.set<- c(est.theta[1], est.theta[2], est.theta[3], est.theta[4], est.theta[5], est.theta[5], est.theta[6], est.theta[6], est.theta[2], est.theta[1], est.theta[4], est.theta[3], est.theta[5], est.theta[5], est.theta[6], est.theta[6],
                     est.theta[3], est.theta[4], est.theta[7], est.theta[8], est.theta[9], est.theta[9], est.theta[10], est.theta[10], est.theta[4], est.theta[3], est.theta[8], est.theta[7], est.theta[9], est.theta[9], est.theta[10], est.theta[10],
@@ -216,10 +218,7 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
   est.coeff[4]<- est.theta[10]/est.theta[7]
 
 
-  # correlation coefficient for residual R:
-  est.coeff[5]<- (est.theta[5] * est.theta[7]* est.theta[15] - est.theta[3] * est.theta[9]* est.theta[15]  - est.theta[6] * est.theta[7]* est.theta[13] + est.theta[3] * est.theta[10]* est.theta[13]) / sqrt(est.theta[7]* est.theta[15]*(est.theta[12]* est.theta[15]- (est.theta[13])^2)*(est.theta[1]*est.theta[7] - (est.theta[3])^2))
-  # attenuation factor for residual R:
-  est.coeff[6]<- (est.theta[5] * est.theta[7]* est.theta[15] - est.theta[3] * est.theta[9]* est.theta[15]  - est.theta[6] * est.theta[7]* est.theta[13] + est.theta[3] * est.theta[10]* est.theta[13]) / (est.theta[15]*(est.theta[1]* est.theta[7]- (est.theta[3])^2))
+ 
 
   # Set inadmissible correlation estimates to NA.
   # Applies only to Rho.N, Rho.E, and Rho.R.
@@ -230,6 +229,11 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
    true.resid.block <- est.theta[12] * est.theta[15] - est.theta[13]^2
    if (true.resid.block <= 0) {
     est.coeff[5:6] <- NA_real_
+   }else{
+   # correlation coefficient for residual R:
+  est.coeff[5]<- (est.theta[5] * est.theta[7]* est.theta[15] - est.theta[3] * est.theta[9]* est.theta[15]  - est.theta[6] * est.theta[7]* est.theta[13] + est.theta[3] * est.theta[10]* est.theta[13]) / sqrt(est.theta[7]* est.theta[15]*(est.theta[12]* est.theta[15]- (est.theta[13])^2)*(est.theta[1]*est.theta[7] - (est.theta[3])^2))
+  # attenuation factor for residual R:
+  est.coeff[6]<- (est.theta[5] * est.theta[7]* est.theta[15] - est.theta[3] * est.theta[9]* est.theta[15]  - est.theta[6] * est.theta[7]* est.theta[13] + est.theta[3] * est.theta[10]* est.theta[13]) / (est.theta[15]*(est.theta[1]* est.theta[7]- (est.theta[3])^2))
    }
 
      
