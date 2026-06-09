@@ -176,7 +176,7 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
 
   # Note: Under the restrictive assumptions in Thompson et al. (2008),
   # the quantity theta[12] * theta[15] - theta[13]^2 is not guaranteed to be positive.
-  # If the term is negative, then we set theta[13] as one value from cov(FN1, FE1), cov(FN1, FE2), cov(FN2, FE1), and cov(FN2, FE2) and the value has the minimum of absolute values of them. 
+  # If the term is negative, then we set theta[13] as one value from cov(FN1, FE1), cov(FN1, FE2), cov(FN2, FE1), and cov(FN2, FE2), closet to the original theta13 estimate.  
   true.resid.bound <- sqrt(est.theta[12] * est.theta[15])
  if (
   is.finite(true.resid.bound) &&
@@ -203,7 +203,14 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
     ]
   }
 }
-     
+
+if (warn && est.theta[12] * est.theta[15] - est.theta[13]^2 <= 0) {
+  warning(
+    "Residual reference covariance block remains non-positive after theta13 adjustment.",
+    call. = FALSE
+  )
+}
+
      
   est.theta.set<- c(est.theta[1], est.theta[2], est.theta[3], est.theta[4], est.theta[5], est.theta[5], est.theta[6], est.theta[6], est.theta[2], est.theta[1], est.theta[4], est.theta[3], est.theta[5], est.theta[5], est.theta[6], est.theta[6],
                     est.theta[3], est.theta[4], est.theta[7], est.theta[8], est.theta[9], est.theta[9], est.theta[10], est.theta[10], est.theta[4], est.theta[3], est.theta[8], est.theta[7], est.theta[9], est.theta[9], est.theta[10], est.theta[10],
