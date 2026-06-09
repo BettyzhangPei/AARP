@@ -176,16 +176,20 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
 
   # Note: Under the restrictive assumptions in Thompson et al. (2008),
   # the quantity theta[12] * theta[15] - theta[13]^2 is not guaranteed to be positive.
-  # If the term is negative, then we set theta[13]  as the minimum of est.theta[12], est.theta[13], est.theta[15].   
-  if (est.theta[12] * est.theta[15] - (est.theta[13])^2 < 0) {
-     #  cat(sprintf(
-     #  "Warning: non-PSD block: theta12=%.6f theta13=%.6f theta15=%.6f\n",
-     #  est.theta[12], est.theta[13], est.theta[15]
-     #  ))
-     est.theta[13] <- min(est.theta[12], est.theta[13], est.theta[15])
+  # If the term is negative, then we set theta[13]  as min(cov(FN1, FE1), cov(FN1, FE2), cov(FN2, FE1), cov(FN2, FE2)).  
+  if (est.theta[12] * est.theta[15] - (est.theta[13])^2 <= 0) {
+   cov.FN1.FE1 <- sum((D[5,] - mean(D[5,])) * (D[7,] - mean(D[7,]))) / (I - 1)
+   cov.FN1.FE2 <- sum((D[5,] - mean(D[5,])) * (D[8,] - mean(D[8,]))) / (I - 1)
+   cov.FN2.FE1 <- sum((D[6,] - mean(D[6,])) * (D[7,] - mean(D[7,]))) / (I - 1)
+   cov.FN2.FE2 <- sum((D[6,] - mean(D[6,])) * (D[8,] - mean(D[8,]))) / (I - 1)
+    
+    est.theta[13] <- min(cov.FN1.FE1, cov.FN1.FE2, cov.FN2.FE1, cov.FN2.FE2)
   }
 
 
+ if (est.theta[12] * est.theta[15] - est.theta[13]^2 <= 0) {
+  warning("Residual reference covariance block remains non-positive after theta13 adjustment.")
+}
      
   est.theta.set<- c(est.theta[1], est.theta[2], est.theta[3], est.theta[4], est.theta[5], est.theta[5], est.theta[6], est.theta[6], est.theta[2], est.theta[1], est.theta[4], est.theta[3], est.theta[5], est.theta[5], est.theta[6], est.theta[6],
                     est.theta[3], est.theta[4], est.theta[7], est.theta[8], est.theta[9], est.theta[9], est.theta[10], est.theta[10], est.theta[4], est.theta[3], est.theta[8], est.theta[7], est.theta[9], est.theta[9], est.theta[10], est.theta[10],
@@ -217,6 +221,15 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
   # attenuation factor for residual R:
   est.coeff[6]<- (est.theta[5] * est.theta[7]* est.theta[15] - est.theta[3] * est.theta[9]* est.theta[15]  - est.theta[6] * est.theta[7]* est.theta[13] + est.theta[3] * est.theta[10]* est.theta[13]) / (est.theta[15]*(est.theta[1]* est.theta[7]- (est.theta[3])^2))
 
+  # Set inadmissible correlation estimates to NA.
+  # Applies only to Rho.N, Rho.E, and Rho.R.
+  rho.rows <- c(1, 3, 5)
+  bad.rho <- !is.finite(est.coeff[rho.rows]) | abs(est.coeff[rho.rows]) > 1
+  est.coeff[rho.rows[bad.rho]] <- NA_real_
+
+
+
+     
   est.coeff<- data.frame(est.coeff)
   rownames(est.coeff) <- c("Rho.N", "Lambda.N", "Rho.E",  "Lambda.E", "Rho.R",  "Lambda.R")
 
@@ -372,7 +385,13 @@ theta_hat <- as.numeric(ex$est.coefficients)
   rownames(CI) <- c("Rho.N", "Lambda.N", "Rho.E", "Lambda.E", "Rho.R", "Lambda.R")
   colnames(CI) <- c("Estimation", "lower bound of 95% CI", "upper bound of 95% CI")
 
-  return(list(CI = as.matrix(CI)))
+  return(list(
+  CI = as.matrix(CI),
+  est.coefficients = ex$est.coefficients,
+  est.theta = ex$est.theta,
+  est.covariance.matrix = ex$est.covariance.matrix,
+  est.fix.parameters = ex$est.fix.parameters
+))
 
 
 }
