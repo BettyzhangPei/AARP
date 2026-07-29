@@ -176,6 +176,11 @@ NME<- function(Q.N.1, Q.N.2, Q.E.1, Q.E.2, F.N.1, F.N.2, F.E.1, F.E.2, ci.method
 
   # Note: Under the restrictive assumptions in Thompson et al. (2008),
   # the quantity theta[12] * theta[15] - theta[13]^2 is not guaranteed to be positive.
+   if (est.theta[12] * est.theta[15] - est.theta[13]^2 <= 0) {
+      warning(
+        "Residual reference covariance block is non-positive."
+      )
+    }
   # If the term is negative, then we set theta[13] as one value from cov(FN1, FE1), cov(FN1, FE2), cov(FN2, FE1), and cov(FN2, FE2), closet to the original theta13 estimate.  
   true.resid.bound <- sqrt(est.theta[12] * est.theta[15])
  if (
